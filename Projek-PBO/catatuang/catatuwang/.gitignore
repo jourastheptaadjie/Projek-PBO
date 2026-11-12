@@ -1,2 +1,18 @@
-/.vscode
-/bin
+# Ignore all root folders and files
+/*
+
+# Allow .gitignore
+!/.gitignore
+
+# Allow only Projek-PBO
+!/Projek-PBO/
+!/Projek-PBO/**
+
+# VS Code
+.vscode/
+
+# Compiled files
+bin/
+
+# Local data
+data/
