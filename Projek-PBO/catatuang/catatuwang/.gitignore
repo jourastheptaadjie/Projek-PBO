@@ -15,4 +15,4 @@
 bin/
 
 # Local data
-data/
+data/**

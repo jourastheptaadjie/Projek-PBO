@@ -1,9 +1,0 @@
-﻿# Ignore everything
-/*
-
-# Allow .gitignore
-!/.gitignore
-
-# Allow Projek-PBO only
-!/Projek-PBO/
-!/Projek-PBO/**
