@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TabPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="catatuwang.Controller" tabClosingPolicy="UNAVAILABLE">
+
+    <!-- ===================== TAB 1: TRANSAKSI ===================== -->
+    <Tab text="Transaksi">
+        <VBox spacing="10">
+            <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+            <GridPane hgap="10" vgap="8">
+                <Label text="Jenis" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <ComboBox fx:id="cbJenis" prefWidth="160" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                <Label text="Kategori" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                <ComboBox fx:id="cbKategori" prefWidth="200" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                <Label text="Jumlah (Rp)" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <TextField fx:id="tfJumlah" promptText="contoh: 25000" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="Tanggal" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                <DatePicker fx:id="dpTanggal" prefWidth="200" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                <Label text="Catatan" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <TextField fx:id="tfCatatan" promptText="opsional" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2"/>
+            </GridPane>
+
+            <HBox spacing="10">
+                <Button text="Tambah" onAction="#tambahTransaksi" defaultButton="true"/>
+                <Button text="Hapus yang dipilih" onAction="#hapusTransaksi"/>
+            </HBox>
+
+            <TableView fx:id="tabelTransaksi" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colTanggal" text="Tanggal" prefWidth="100"/>
+                    <TableColumn fx:id="colJenis" text="Jenis" prefWidth="100"/>
+                    <TableColumn fx:id="colKategori" text="Kategori" prefWidth="150"/>
+                    <TableColumn fx:id="colJumlah" text="Jumlah" prefWidth="120"/>
+                    <TableColumn fx:id="colCatatan" text="Catatan" prefWidth="240"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </Tab>
+
+    <!-- ===================== TAB 2: ANGGARAN ===================== -->
+    <Tab text="Anggaran">
+        <VBox spacing="12">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+            <Label text="Anggaran pengeluaran per bulan" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <HBox spacing="10">
+                <Label text="Anggaran (Rp)"/>
+                <TextField fx:id="tfAnggaran" promptText="contoh: 1500000"/>
+                <Button text="Simpan" onAction="#simpanAnggaran"/>
+            </HBox>
+
+            <Separator/>
+
+            <Label fx:id="lblBulanIni" style="-fx-font-weight: bold;"/>
+            <ProgressBar fx:id="pbAnggaran" prefWidth="400" progress="0"/>
+            <Label fx:id="lblTerpakai"/>
+            <Label fx:id="lblSisa"/>
+            <Label fx:id="lblPeringatan" style="-fx-text-fill: #c0392b; -fx-font-weight: bold;"/>
+        </VBox>
+    </Tab>
+
+    <!-- ===================== TAB 3: REKAP ===================== -->
+    <Tab text="Rekap">
+        <VBox spacing="12">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Bulan"/>
+                <ComboBox fx:id="cbBulan" prefWidth="160"/>
+            </HBox>
+
+            <GridPane hgap="20" vgap="6">
+                <Label text="Total pemasukan" GridPane.rowIndex="0"/>
+                <Label fx:id="lblPemasukan" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <Label text="Total pengeluaran" GridPane.rowIndex="1"/>
+                <Label fx:id="lblPengeluaran" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Label text="Saldo" GridPane.rowIndex="2" style="-fx-font-weight: bold;"/>
+                <Label fx:id="lblSaldo" GridPane.columnIndex="1" GridPane.rowIndex="2" style="-fx-font-weight: bold;"/>
+                <Label text="Anggaran" GridPane.rowIndex="3"/>
+                <Label fx:id="lblAnggaranRekap" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            </GridPane>
+
+            <Label text="Pengeluaran per kategori" style="-fx-font-weight: bold;"/>
+            <TableView fx:id="tabelRekap" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colRekapKategori" text="Kategori" prefWidth="250"/>
+                    <TableColumn fx:id="colRekapTotal" text="Total" prefWidth="150"/>
+                    <TableColumn fx:id="colRekapPersen" text="Persentase" prefWidth="150"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </Tab>
+</TabPane>
