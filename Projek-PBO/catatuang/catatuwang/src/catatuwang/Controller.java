@@ -11,34 +11,60 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Side;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
+import javafx.util.StringConverter;
 
 public class Controller {
 
-    private static final String[] KATEGORI_PENGELUARAN =
-            {"Makanan & Minuman", "Transportasi", "Kuliah & Buku", "Hiburan", "Kos & Tagihan", "Lainnya"};
-    private static final String[] KATEGORI_PEMASUKAN =
-            {"Uang Saku", "Beasiswa", "Gaji / Kerja Sampingan", "Lainnya"};
+    private static final String[] KATEGORI_PENGELUARAN = { "Makanan & Minuman", "Transportasi", "Kuliah & Buku",
+            "Hiburan", "Kos & Tagihan", "Lainnya" };
+    private static final String[] KATEGORI_PEMASUKAN = { "Uang Saku", "Beasiswa", "Gaji / Kerja Sampingan", "Lainnya" };
 
     // ----- komponen tab Transaksi -----
-    @FXML private ComboBox<String> cbJenis;
-    @FXML private ComboBox<String> cbKategori;
-    @FXML private TextField tfJumlah;
-    @FXML private DatePicker dpTanggal;
-    @FXML private TextField tfCatatan;
-    @FXML private TableView<Transaksi> tabelTransaksi;
-    @FXML private TableColumn<Transaksi, String> colTanggal, colJenis, colKategori, colJumlah, colCatatan;
+    @FXML
+    private ComboBox<String> cbJenis;
+    @FXML
+    private ComboBox<String> cbKategori;
+    @FXML
+    private TextField tfJumlah;
+    @FXML
+    private DatePicker dpTanggal;
+    @FXML
+    private TextField tfCatatan;
+    @FXML
+    private TableView<Transaksi> tabelTransaksi;
+    @FXML
+    private TableColumn<Transaksi, String> colTanggal, colJenis, colKategori, colJumlah, colCatatan;
 
     // ----- komponen tab Anggaran -----
-    @FXML private TextField tfAnggaran;
-    @FXML private Label lblBulanIni, lblTerpakai, lblSisa, lblPeringatan;
-    @FXML private ProgressBar pbAnggaran;
+    @FXML
+    private TextField tfAnggaran;
+    @FXML
+    private Label lblBulanIni, lblTerpakai, lblSisa, lblPeringatan;
+    @FXML
+    private ProgressBar pbAnggaran;
 
     // ----- komponen tab Rekap -----
-    @FXML private ComboBox<YearMonth> cbBulan;
-    @FXML private Label lblPemasukan, lblPengeluaran, lblSaldo, lblAnggaranRekap;
-    @FXML private TableView<String[]> tabelRekap;
-    @FXML private TableColumn<String[], String> colRekapKategori, colRekapTotal, colRekapPersen;
+    @FXML
+    private ComboBox<YearMonth> cbBulan;
+    @FXML
+    private Label lblPemasukan, lblPengeluaran, lblSaldo, lblAnggaranRekap;
+    @FXML
+    private TableView<String[]> tabelRekap;
+    @FXML
+    private TableColumn<String[], String> colRekapKategori, colRekapTotal, colRekapPersen;
+
+    // ----- komponen tab Grafik -----
+    @FXML
+    private ComboBox<YearMonth> cbBulanGrafik;
+    @FXML
+    private ComboBox<String> cbTipeGrafik;
+    @FXML
+    private PieChart pieChart;
+    @FXML
+    private Label lblGrafikKosong;
 
     // ----- data -----
     private final ObservableList<Transaksi> daftar = FXCollections.observableArrayList();
@@ -73,10 +99,38 @@ public class Controller {
         tabelRekap.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         // anggaran
-        if (anggaran > 0) tfAnggaran.setText(String.valueOf(anggaran));
+        if (anggaran > 0)
+            tfAnggaran.setText(String.valueOf(anggaran));
+
+        // rekap & grafik: format nama bulan pada dropdown
+        StringConverter<YearMonth> konverterBulan = new StringConverter<>() {
+            @Override
+            public String toString(YearMonth ym) {
+                return ym != null ? namaBulan(ym) : "";
+            }
+
+            @Override
+            public YearMonth fromString(String s) {
+                return null;
+            }
+        };
+        cbBulan.setConverter(konverterBulan);
+        cbBulanGrafik.setConverter(konverterBulan);
+
+        // grafik: pilihan tipe tampilan
+        // grafik
+        pieChart.setLegendSide(Side.BOTTOM);
+
+        cbTipeGrafik.getItems().addAll(
+                "Pengeluaran per Kategori",
+                "Pemasukan per Kategori",
+                "Perbandingan Pemasukan vs Pengeluaran");
+        cbTipeGrafik.setValue("Pengeluaran per Kategori");
+        cbTipeGrafik.setOnAction(e -> perbaruiGrafik());
 
         // rekap: pilihan bulan
         cbBulan.setOnAction(e -> hitungRekap());
+        cbBulanGrafik.setOnAction(e -> perbaruiGrafik());
         perbaruiPilihanBulan(YearMonth.now());
         perbaruiAnggaran();
     }
@@ -85,7 +139,8 @@ public class Controller {
 
     private void isiKategori() {
         cbKategori.getItems().setAll(cbJenis.getValue().equals("Pemasukan")
-                ? KATEGORI_PEMASUKAN : KATEGORI_PENGELUARAN);
+                ? KATEGORI_PEMASUKAN
+                : KATEGORI_PENGELUARAN);
         cbKategori.getSelectionModel().selectFirst();
     }
 
@@ -132,7 +187,8 @@ public class Controller {
     private void simpanAnggaran() {
         try {
             long nilai = Long.parseLong(tfAnggaran.getText().trim());
-            if (nilai < 0) throw new NumberFormatException();
+            if (nilai < 0)
+                throw new NumberFormatException();
             anggaran = nilai;
         } catch (NumberFormatException e) {
             pesan("Anggaran harus berupa angka (0 atau lebih).");
@@ -173,24 +229,34 @@ public class Controller {
     private void perbaruiPilihanBulan(YearMonth pilihanBaru) {
         TreeSet<YearMonth> bulan = new TreeSet<>(Comparator.reverseOrder());
         bulan.add(YearMonth.now());
-        for (Transaksi t : daftar) bulan.add(YearMonth.from(t.getTanggal()));
+        for (Transaksi t : daftar)
+            bulan.add(YearMonth.from(t.getTanggal()));
 
-        YearMonth dipilih = cbBulan.getValue() != null ? cbBulan.getValue() : pilihanBaru;
+        YearMonth dipilihRekap = cbBulan.getValue() != null ? cbBulan.getValue() : pilihanBaru;
         cbBulan.setOnAction(null);
         cbBulan.getItems().setAll(bulan);
-        cbBulan.setValue(bulan.contains(dipilih) ? dipilih : YearMonth.now());
+        cbBulan.setValue(bulan.contains(dipilihRekap) ? dipilihRekap : YearMonth.now());
         cbBulan.setOnAction(e -> hitungRekap());
         hitungRekap();
+
+        YearMonth dipilihGrafik = cbBulanGrafik.getValue() != null ? cbBulanGrafik.getValue() : pilihanBaru;
+        cbBulanGrafik.setOnAction(null);
+        cbBulanGrafik.getItems().setAll(bulan);
+        cbBulanGrafik.setValue(bulan.contains(dipilihGrafik) ? dipilihGrafik : YearMonth.now());
+        cbBulanGrafik.setOnAction(e -> perbaruiGrafik());
+        perbaruiGrafik();
     }
 
     private void hitungRekap() {
         YearMonth bulan = cbBulan.getValue();
-        if (bulan == null) return;
+        if (bulan == null)
+            return;
 
         long masuk = 0, keluar = 0;
         Map<String, Long> perKategori = new LinkedHashMap<>();
         for (Transaksi t : daftar) {
-            if (!YearMonth.from(t.getTanggal()).equals(bulan)) continue;
+            if (!YearMonth.from(t.getTanggal()).equals(bulan))
+                continue;
             if (t.isPemasukan()) {
                 masuk += t.getJumlah();
             } else {
@@ -203,16 +269,135 @@ public class Controller {
         lblPengeluaran.setText(rupiah(keluar));
         lblSaldo.setText(rupiah(masuk - keluar));
         lblAnggaranRekap.setText(anggaran > 0
-                ? rupiah(anggaran) + (keluar > anggaran ? "  (terlampaui)" : "  (sisa " + rupiah(anggaran - keluar) + ")")
+                ? rupiah(anggaran)
+                        + (keluar > anggaran ? "  (terlampaui)" : "  (sisa " + rupiah(anggaran - keluar) + ")")
                 : "belum diatur");
 
         barisRekap.clear();
         final long totalKeluar = keluar;
         perKategori.entrySet().stream()
                 .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
-                .forEach(e -> barisRekap.add(new String[]{
+                .forEach(e -> barisRekap.add(new String[] {
                         e.getKey(), rupiah(e.getValue()),
-                        String.format("%.1f%%", e.getValue() * 100.0 / totalKeluar)}));
+                        String.format("%.1f%%", e.getValue() * 100.0 / totalKeluar) }));
+    }
+
+    // ===================== GRAFIK =====================
+
+    private void perbaruiGrafik() {
+        YearMonth bulan = cbBulanGrafik.getValue();
+        String tipe = cbTipeGrafik.getValue();
+        if (bulan == null || tipe == null)
+            return;
+
+        ObservableList<PieChart.Data> pieData = FXCollections.observableArrayList();
+
+        if ("Pengeluaran per Kategori".equals(tipe)) {
+            Map<String, Long> perKategori = new LinkedHashMap<>();
+            long total = 0;
+            for (Transaksi t : daftar) {
+                if (!t.isPemasukan() && YearMonth.from(t.getTanggal()).equals(bulan)) {
+                    total += t.getJumlah();
+                    perKategori.merge(t.getKategori(), t.getJumlah(), Long::sum);
+                }
+            }
+            if (total == 0) {
+                tampilkanGrafikKosong("Tidak ada catatan pengeluaran pada " + namaBulan(bulan));
+                return;
+            }
+            pieChart.setTitle("Distribusi Pengeluaran (" + namaBulan(bulan) + ")");
+            final long totalKeluar = total;
+            perKategori.entrySet().stream()
+                    .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                    .forEach(entry -> {
+                        double persen = entry.getValue() * 100.0 / totalKeluar;
+                        String label = String.format("%s (%.1f%%)", entry.getKey(), persen);
+                        PieChart.Data slice = new PieChart.Data(label, entry.getValue());
+                        pasangTooltip(slice, entry.getKey() + ": " + rupiah(entry.getValue()) + " ("
+                                + String.format("%.1f%%", persen) + ")");
+                        pieData.add(slice);
+                    });
+        } else if ("Pemasukan per Kategori".equals(tipe)) {
+            Map<String, Long> perKategori = new LinkedHashMap<>();
+            long total = 0;
+            for (Transaksi t : daftar) {
+                if (t.isPemasukan() && YearMonth.from(t.getTanggal()).equals(bulan)) {
+                    total += t.getJumlah();
+                    perKategori.merge(t.getKategori(), t.getJumlah(), Long::sum);
+                }
+            }
+            if (total == 0) {
+                tampilkanGrafikKosong("Tidak ada catatan pemasukan pada " + namaBulan(bulan));
+                return;
+            }
+            pieChart.setTitle("Distribusi Pemasukan (" + namaBulan(bulan) + ")");
+            final long totalMasuk = total;
+            perKategori.entrySet().stream()
+                    .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+                    .forEach(entry -> {
+                        double persen = entry.getValue() * 100.0 / totalMasuk;
+                        String label = String.format("%s (%.1f%%)", entry.getKey(), persen);
+                        PieChart.Data slice = new PieChart.Data(label, entry.getValue());
+                        pasangTooltip(slice, entry.getKey() + ": " + rupiah(entry.getValue()) + " ("
+                                + String.format("%.1f%%", persen) + ")");
+                        pieData.add(slice);
+                    });
+        } else { // "Perbandingan Pemasukan vs Pengeluaran"
+            long masuk = 0, keluar = 0;
+            for (Transaksi t : daftar) {
+                if (YearMonth.from(t.getTanggal()).equals(bulan)) {
+                    if (t.isPemasukan())
+                        masuk += t.getJumlah();
+                    else
+                        keluar += t.getJumlah();
+                }
+            }
+            long total = masuk + keluar;
+            if (total == 0) {
+                tampilkanGrafikKosong("Tidak ada transaksi pada " + namaBulan(bulan));
+                return;
+            }
+            pieChart.setTitle("Perbandingan Pemasukan vs Pengeluaran (" + namaBulan(bulan) + ")");
+            if (masuk > 0) {
+                double persenMasuk = masuk * 100.0 / total;
+                String label = String.format("Pemasukan (%.1f%%)", persenMasuk);
+                PieChart.Data sliceMasuk = new PieChart.Data(label, masuk);
+                pasangTooltip(sliceMasuk,
+                        "Total Pemasukan: " + rupiah(masuk) + " (" + String.format("%.1f%%", persenMasuk) + ")");
+                pieData.add(sliceMasuk);
+            }
+            if (keluar > 0) {
+                double persenKeluar = keluar * 100.0 / total;
+                String label = String.format("Pengeluaran (%.1f%%)", persenKeluar);
+                PieChart.Data sliceKeluar = new PieChart.Data(label, keluar);
+                pasangTooltip(sliceKeluar,
+                        "Total Pengeluaran: " + rupiah(keluar) + " (" + String.format("%.1f%%", persenKeluar) + ")");
+                pieData.add(sliceKeluar);
+            }
+        }
+
+        pieChart.setData(pieData);
+        pieChart.setVisible(true);
+        lblGrafikKosong.setVisible(false);
+    }
+
+    private void tampilkanGrafikKosong(String pesan) {
+        pieChart.setData(FXCollections.observableArrayList());
+        pieChart.setVisible(false);
+        lblGrafikKosong.setText(pesan);
+        lblGrafikKosong.setVisible(true);
+    }
+
+    private void pasangTooltip(PieChart.Data data, String info) {
+        if (data.getNode() != null) {
+            Tooltip.install(data.getNode(), new Tooltip(info));
+        } else {
+            data.nodeProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal != null) {
+                    Tooltip.install(newVal, new Tooltip(info));
+                }
+            });
+        }
     }
 
     // ===================== UTILITAS =====================
@@ -226,7 +411,8 @@ public class Controller {
     private long totalPengeluaran(YearMonth bulan) {
         long total = 0;
         for (Transaksi t : daftar) {
-            if (!t.isPemasukan() && YearMonth.from(t.getTanggal()).equals(bulan)) total += t.getJumlah();
+            if (!t.isPemasukan() && YearMonth.from(t.getTanggal()).equals(bulan))
+                total += t.getJumlah();
         }
         return total;
     }
@@ -236,8 +422,8 @@ public class Controller {
     }
 
     private static String namaBulan(YearMonth ym) {
-        String[] nama = {"Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli",
-                "Agustus", "September", "Oktober", "November", "Desember"};
+        String[] nama = { "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli",
+                "Agustus", "September", "Oktober", "November", "Desember" };
         return nama[ym.getMonthValue() - 1] + " " + ym.getYear();
     }
 

@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Menyimpan data ke file teks sederhana (data.txt) agar data tidak hilang saat aplikasi ditutup.
- * Format: baris pertama = anggaran bulanan, baris berikutnya = satu transaksi (dipisah tanda '|').
+ * Menyimpan data ke file teks sederhana (data.txt) agar data tidak hilang saat
+ * aplikasi ditutup.
+ * Format: baris pertama = anggaran bulanan, baris berikutnya = satu transaksi
+ * (dipisah tanda '|').
  */
 public class DataStore {
 
@@ -29,9 +31,13 @@ public class DataStore {
         }
     }
 
-    /** Mengisi daftar dengan transaksi dari file dan mengembalikan anggaran bulanan (0 jika belum ada). */
+    /**
+     * Mengisi daftar dengan transaksi dari file dan mengembalikan anggaran bulanan
+     * (0 jika belum ada).
+     */
     public static long muat(List<Transaksi> daftar) {
-        if (!Files.exists(FILE)) return 0;
+        if (!Files.exists(FILE))
+            return 0;
         try {
             List<String> baris = Files.readAllLines(FILE);
             long anggaran = Long.parseLong(baris.get(0).trim());
