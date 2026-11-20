@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="catatuwang.gui.GrafikController" spacing="15">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <Label text="Bulan:" style="-fx-font-weight: bold;"/>
+        <ComboBox fx:id="cbBulanGrafik" prefWidth="180"/>
+
+        <Label text="Tampilan:" style="-fx-font-weight: bold;"/>
+        <ComboBox fx:id="cbTipeGrafik" prefWidth="260"/>
+    </HBox>
+
+    <Separator/>
+
+    <StackPane VBox.vgrow="ALWAYS">
+        <PieChart fx:id="pieChart" legendSide="BOTTOM"/>
+        <Label fx:id="lblGrafikKosong" text="Belum ada data untuk periode ini."
+               style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d; -fx-font-style: italic;"
+               visible="false"/>
+    </StackPane>
+</VBox>

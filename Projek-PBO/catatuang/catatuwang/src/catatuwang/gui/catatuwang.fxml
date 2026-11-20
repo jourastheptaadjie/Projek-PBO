@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+
+<!-- Tiap tab dipisah ke file FXML dan controller sendiri; Controller hanya menyatukannya. -->
+<TabPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="catatuwang.gui.Controller" tabClosingPolicy="UNAVAILABLE">
+    <Tab text="Transaksi">
+        <fx:include fx:id="transaksiTab" source="transaksi.fxml"/>
+    </Tab>
+    <Tab text="Anggaran">
+        <fx:include fx:id="anggaranTab" source="anggaran.fxml"/>
+    </Tab>
+    <Tab text="Rekap">
+        <fx:include fx:id="rekapTab" source="rekap.fxml"/>
+    </Tab>
+    <Tab text="Grafik">
+        <fx:include fx:id="grafikTab" source="grafik.fxml"/>
+    </Tab>
+</TabPane>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="catatuwang.gui.RekapController" spacing="12">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Bulan"/>
+        <ComboBox fx:id="cbBulan" prefWidth="160"/>
+    </HBox>
+
+    <GridPane hgap="20" vgap="6">
+        <Label text="Total pemasukan" GridPane.rowIndex="0"/>
+        <Label fx:id="lblPemasukan" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        <Label text="Total pengeluaran" GridPane.rowIndex="1"/>
+        <Label fx:id="lblPengeluaran" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <Label text="Saldo" GridPane.rowIndex="2" style="-fx-font-weight: bold;"/>
+        <Label fx:id="lblSaldo" GridPane.columnIndex="1" GridPane.rowIndex="2" style="-fx-font-weight: bold;"/>
+        <Label text="Anggaran" GridPane.rowIndex="3"/>
+        <Label fx:id="lblAnggaranRekap" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+    </GridPane>
+
+    <Label text="Pengeluaran per kategori" style="-fx-font-weight: bold;"/>
+    <TableView fx:id="tabelRekap" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colRekapKategori" text="Kategori" prefWidth="250"/>
+            <TableColumn fx:id="colRekapTotal" text="Total" prefWidth="150"/>
+            <TableColumn fx:id="colRekapPersen" text="Persentase" prefWidth="150"/>
+        </columns>
+    </TableView>
+</VBox>

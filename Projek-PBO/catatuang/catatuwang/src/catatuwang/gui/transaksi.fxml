@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="catatuwang.gui.TransaksiController" spacing="10">
+    <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+    <GridPane hgap="10" vgap="8">
+        <Label text="Jenis" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <ComboBox fx:id="cbJenis" prefWidth="160" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+        <Label text="Kategori" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+        <ComboBox fx:id="cbKategori" prefWidth="200" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+        <Label text="Jumlah (Rp)" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField fx:id="tfJumlah" promptText="contoh: 25000" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+        <Label text="Tanggal" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+        <DatePicker fx:id="dpTanggal" prefWidth="200" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+        <Label text="Catatan" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <TextField fx:id="tfCatatan" promptText="opsional" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2"/>
+    </GridPane>
+
+    <HBox spacing="10">
+        <Button text="Tambah" onAction="#tambahTransaksi" defaultButton="true"/>
+        <Button text="Hapus yang dipilih" onAction="#hapusTransaksi"/>
+    </HBox>
+
+    <TableView fx:id="tabelTransaksi" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colTanggal" text="Tanggal" prefWidth="100"/>
+            <TableColumn fx:id="colJenis" text="Jenis" prefWidth="100"/>
+            <TableColumn fx:id="colKategori" text="Kategori" prefWidth="150"/>
+            <TableColumn fx:id="colJumlah" text="Jumlah" prefWidth="120"/>
+            <TableColumn fx:id="colCatatan" text="Catatan" prefWidth="240"/>
+        </columns>
+    </TableView>
+</VBox>
