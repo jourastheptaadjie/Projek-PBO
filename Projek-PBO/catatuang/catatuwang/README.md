@@ -51,19 +51,34 @@ Aplikasi ini dirancang dengan pendekatan modular berbasis arsitektur **MVC (Mode
 
 ```
 src/catatuwang/
-├── Main.java          # Entry point aplikasi JavaFX, pengaturan Stage & Icon
-├── Controller.java    # Logika antarmuka, event handler, kalkulasi rekap, dan visualisasi grafik
-├── Transaksi.java     # Model representasi entitas data transaksi
-├── DataStore.java     # Pengelolaan penyimpanan & pemuatan file lokal (data.txt)
-├── catatuwang.fxml    # Definisi tata letak UI (XML berbasis JavaFX)
-└── icon.png           # Ikon aplikasi
+├── main/
+│   ├── Main.java                  # Entry point aplikasi JavaFX, pengaturan Stage & Icon
+│   └── icon.png                   # Ikon aplikasi
+├── gui/
+│   ├── Controller.java            # Controller utama, merangkai controller tiap tab
+│   ├── TransaksiController.java   # Tab Transaksi: form tambah, tabel, hapus
+│   ├── AnggaranController.java    # Tab Anggaran: target bulanan, progress bar, peringatan
+│   ├── RekapController.java       # Tab Rekap: ringkasan & rincian kategori per bulan
+│   ├── GrafikController.java      # Tab Grafik: pie chart & tooltip
+│   ├── PilihanBulan.java          # Pengaturan ComboBox bulan (Rekap & Grafik)
+│   ├── Pesan.java                 # Dialog peringatan
+│   ├── catatuwang.fxml            # TabPane utama (meng-include fxml tiap tab)
+│   └── transaksi / anggaran / rekap / grafik .fxml
+├── model/
+│   ├── Transaksi.java             # Entitas data transaksi
+│   ├── Kategori.java              # Daftar kategori pemasukan & pengeluaran
+│   ├── AppState.java              # Data bersama: daftar transaksi, anggaran, perhitungan total
+│   └── DataStore.java             # Penyimpanan & pemuatan file lokal (data.txt)
+└── util/
+    └── Format.java                # Format Rupiah, nama bulan, persentase
 ```
 
 ### Konsep OOP yang Diimplementasikan:
 1. **Encapsulation (Enkapsulasi)**:
    - Kelas `Transaksi` menyembunyikan atribut (`private`) dan menyediakan akses terkontrol melalui *getter*.
 2. **Separation of Concerns (Pemisahan Tanggung Jawab)**:
-   - Logika I/O file dikapsulasi pada kelas `DataStore`, terpisah dari logika antarmuka di `Controller`.
+   - Kode dibagi per package: `gui` (tampilan & controller tiap tab), `model` (data & penyimpanan), `util` (fungsi bantu), `main` (entry point).
+   - Logika I/O file dikapsulasi pada kelas `DataStore`, terpisah dari logika antarmuka di package `gui`.
 3. **Data Binding & Collections**:
    - Pemanfaatan `ObservableList`, `SimpleStringProperty`, dan `TableView` JavaFX untuk sinkronisasi otomatis antara model dan tampilan UI.
 
@@ -90,11 +105,16 @@ src/catatuwang/
 ### Menjalankan melalui Terminal:
 Kompilasi kode program:
 ```powershell
-javac --module-path "C:\javafx\lib" --add-modules javafx.controls,javafx.fxml -d bin src\catatuwang\*.java
+javac --module-path "C:\javafx\lib" --add-modules javafx.controls,javafx.fxml -d bin src\catatuwang\main\*.java src\catatuwang\gui\*.java src\catatuwang\model\*.java src\catatuwang\util\*.java
+```
+Salin resource (FXML & ikon) ke folder `bin`:
+```powershell
+copy src\catatuwang\gui\*.fxml bin\catatuwang\gui\
+copy src\catatuwang\main\icon.png bin\catatuwang\main\
 ```
 Jalankan aplikasi:
 ```powershell
-java --module-path "C:\javafx\lib" --add-modules javafx.controls,javafx.fxml -cp bin catatuwang.Main
+java --module-path "C:\javafx\lib" --add-modules javafx.controls,javafx.fxml -cp bin catatuwang.main.Main
 ```
 *(Sesuaikan path `"C:\javafx\lib"` dengan direktori instalasi JavaFX di komputer Anda).*
 
