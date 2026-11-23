@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -21,6 +21,11 @@
 
     <StackPane VBox.vgrow="ALWAYS">
         <PieChart fx:id="pieChart" legendSide="BOTTOM"/>
+        <LineChart fx:id="lineChart" visible="false"
+                   style="CHART_COLOR_1: #27ae60; CHART_COLOR_2: #c0392b;">
+            <xAxis><CategoryAxis label="Tanggal"/></xAxis>
+            <yAxis><NumberAxis label="Jumlah (Rp)"/></yAxis>
+        </LineChart>
         <Label fx:id="lblGrafikKosong" text="Belum ada data untuk periode ini."
                style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d; -fx-font-style: italic;"
                visible="false"/>

@@ -28,12 +28,13 @@
 - **Ringkasan Finansial**: Menampilkan total pemasukan, total pengeluaran, saldo bersih (*cash flow*), dan sisa anggaran.
 - **Tabel Rincian Kategori**: Rincian total pengeluaran beserta proporsi persentase untuk setiap kategori.
 
-### 4. Visualisasi Statistik (Pie Chart) 📊
+### 4. Visualisasi Statistik (Pie Chart & Line Chart) 📊
 - **Diagram Lingkaran Interaktif**: Mempermudah pembacaan distribusi keuangan bulanan secara visual.
-- **3 Mode Tampilan Grafik**:
+- **4 Mode Tampilan Grafik**:
   1. *Distribusi Pengeluaran per Kategori*
   2. *Distribusi Pemasukan per Kategori*
   3. *Perbandingan Total Pemasukan vs Pengeluaran*
+  4. *Pengeluaran per Hari* (line chart total pengeluaran tiap tanggal dalam sebulan)
 - **Fitur Interaktif**:
   - Label irisan grafik dilengkapi dengan persentase.
   - *Tooltip* informatif yang muncul saat kursor diarahkan ke irisan diagram (menampilkan nama kategori, nominal Rupiah, dan persentase).

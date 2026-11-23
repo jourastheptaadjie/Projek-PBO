@@ -1,19 +1,18 @@
-# Ignore everything in this folder
+# Ignore all root folders and files
 /*
 
-# Allow important project files
+# Allow .gitignore
 !/.gitignore
-!/README.md
 
-# Allow source code
-!/src/
-!/src/**
+# Allow only Projek-PBO
+!/Projek-PBO/
+!/Projek-PBO/**
 
-# Allow libraries
-!/lib/
-!/lib/**
+# VS Code
+.vscode/
 
-# Ignore local files
-/.vscode/
-/bin/
-/data.txt
+# Compiled files
+bin/
+
+# Local data
+data/**

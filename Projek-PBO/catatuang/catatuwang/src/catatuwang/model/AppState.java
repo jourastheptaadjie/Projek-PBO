@@ -84,6 +84,16 @@ public class AppState {
         return total;
     }
 
+    /** Total pemasukan atau pengeluaran tiap tanggal pada bulan tertentu (indeks 0 = tanggal 1). */
+    public long[] totalPerHari(YearMonth bulan, boolean pemasukan) {
+        long[] hasil = new long[bulan.lengthOfMonth()];
+        for (Transaksi t : daftar) {
+            if (t.isPemasukan() == pemasukan && YearMonth.from(t.getTanggal()).equals(bulan))
+                hasil[t.getTanggal().getDayOfMonth() - 1] += t.getJumlah();
+        }
+        return hasil;
+    }
+
     /** Total per kategori pada bulan tertentu, diurutkan dari yang terbesar. */
     public Map<String, Long> totalPerKategori(YearMonth bulan, boolean pemasukan) {
         Map<String, Long> hasil = new LinkedHashMap<>();
